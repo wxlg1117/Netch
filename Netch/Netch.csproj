@@ -12,6 +12,21 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Netch.Netch</StartupObject>
@@ -26,6 +41,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -37,6 +53,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +76,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Netch.ico</ApplicationIcon>
@@ -67,10 +85,16 @@
     <ApplicationManifest>App.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web" />
@@ -85,22 +109,156 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3rd\DnsClient.NET\DnsDatagramReader.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsDatagramWriter.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsHeaderFlag.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsMessageHandler.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsOpCode.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsQueryExtensions.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsQueryResponse.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsQuestion.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsRecordFactory.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsRequestHeader.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsRequestMessage.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsResponseCode.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsResponseHeader.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsResponseMessage.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsString.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsTcpMessageHandler.cs" />
+    <Compile Include="3rd\DnsClient.NET\DnsUdpMessageHandler.cs" />
+    <Compile Include="3rd\DnsClient.NET\IDnsQuery.cs" />
+    <Compile Include="3rd\DnsClient.NET\IDnsQueryResponse.cs" />
+    <Compile Include="3rd\DnsClient.NET\ILookupClient.cs" />
+    <Compile Include="3rd\DnsClient.NET\Internal\PooledBytes.cs" />
+    <Compile Include="3rd\DnsClient.NET\Internal\StringBuilderObjectPool.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\DisposableIntPtr.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\Interop.Libraries.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\Linux\RowConfigReader.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\Linux\StringParsingHelper.Dns.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\Windows\IpHlpApi\FixedNetworkInformation.cs" />
+    <Compile Include="3rd\DnsClient.NET\Interop\Windows\IpHlpApi\Interop.IpHlpApi.cs" />
+    <Compile Include="3rd\DnsClient.NET\IpAddressExtensions.cs" />
+    <Compile Include="3rd\DnsClient.NET\LookupClient.cs" />
+    <Compile Include="3rd\DnsClient.NET\NameServer.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\AaaaRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\AddressRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\AfsDbRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\ARecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\CaaRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\CNameRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\DnsResourceRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\EmptyRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\HinfoRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\MbRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\MgRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\MInfoRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\MrRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\MXRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\NsRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\NullRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\Options\OptRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\PtrRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\ResourceRecordType.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\RpRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\SoaRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\SrvRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\SshfpRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\TxtRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\UriRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\Protocol\WksRecord.cs" />
+    <Compile Include="3rd\DnsClient.NET\QueryClass.cs" />
+    <Compile Include="3rd\DnsClient.NET\QueryType.cs" />
+    <Compile Include="3rd\DnsClient.NET\ResourceRecordCollectionExtensions.cs" />
+    <Compile Include="3rd\DnsClient.NET\ResponseCache.cs" />
+    <Compile Include="3rd\DnsClient.NET\StaticLog.cs" />
+    <Compile Include="3rd\DnsClient.NET\TaskExtensions.cs" />
+    <Compile Include="3rd\DNS\Client\ClientRequest.cs" />
+    <Compile Include="3rd\DNS\Client\ClientResponse.cs" />
+    <Compile Include="3rd\DNS\Client\DnsClient.cs" />
+    <Compile Include="3rd\DNS\Client\RequestResolver\IRequestResolver.cs" />
+    <Compile Include="3rd\DNS\Client\RequestResolver\NullRequestResolver.cs" />
+    <Compile Include="3rd\DNS\Client\RequestResolver\TcpRequestResolver.cs" />
+    <Compile Include="3rd\DNS\Client\RequestResolver\UdpRequestResolver.cs" />
+    <Compile Include="3rd\DNS\Client\ResponseException.cs" />
+    <Compile Include="3rd\DNS\Protocol\CharacterString.cs" />
+    <Compile Include="3rd\DNS\Protocol\Domain.cs" />
+    <Compile Include="3rd\DNS\Protocol\Header.cs" />
+    <Compile Include="3rd\DNS\Protocol\IMessage.cs" />
+    <Compile Include="3rd\DNS\Protocol\IMessageEntry.cs" />
+    <Compile Include="3rd\DNS\Protocol\IRequest.cs" />
+    <Compile Include="3rd\DNS\Protocol\IResponse.cs" />
+    <Compile Include="3rd\DNS\Protocol\Marshalling\EndianAttribute.cs" />
+    <Compile Include="3rd\DNS\Protocol\Marshalling\Endianness.cs" />
+    <Compile Include="3rd\DNS\Protocol\Marshalling\Struct.cs" />
+    <Compile Include="3rd\DNS\Protocol\OperationCode.cs" />
+    <Compile Include="3rd\DNS\Protocol\Question.cs" />
+    <Compile Include="3rd\DNS\Protocol\RecordClass.cs" />
+    <Compile Include="3rd\DNS\Protocol\RecordType.cs" />
+    <Compile Include="3rd\DNS\Protocol\Request.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\BaseResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\CanonicalNameResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\IPAddressResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\IResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\MailExchangeResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\NameServerResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\PointerResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\ResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\ResourceRecordFactory.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\StartOfAuthorityResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResourceRecords\TextResourceRecord.cs" />
+    <Compile Include="3rd\DNS\Protocol\Response.cs" />
+    <Compile Include="3rd\DNS\Protocol\ResponseCode.cs" />
+    <Compile Include="3rd\DNS\Protocol\Utils\ByteExtensions.cs" />
+    <Compile Include="3rd\DNS\Protocol\Utils\ByteStream.cs" />
+    <Compile Include="3rd\DNS\Protocol\Utils\ObjectStringifier.cs" />
+    <Compile Include="3rd\DNS\Protocol\Utils\TaskExtensions.cs" />
+    <Compile Include="3rd\DNS\Server\DnsServer.cs" />
+    <Compile Include="3rd\DNS\Server\MasterFile.cs" />
     <Compile Include="3rd\NFSDK2\nfapinet.cs" />
+    <Compile Include="Controllers\DNSController.cs" />
+    <Compile Include="Controllers\HTTPController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\NFController.cs" />
+    <Compile Include="Controllers\PrivoxyController.cs" />
     <Compile Include="Controllers\SSRController.cs" />
     <Compile Include="Controllers\SSController.cs" />
+    <Compile Include="Controllers\TUNTAPController.cs" />
+    <Compile Include="Controllers\VMessController.cs" />
+    <Compile Include="Forms\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GlobalBypassIPForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GlobalBypassIPForm.Designer.cs">
+      <DependentUpon>GlobalBypassIPForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ModeForm.cs">
+    <Compile Include="Forms\Mode\Process.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ModeForm.Designer.cs">
-      <DependentUpon>ModeForm.cs</DependentUpon>
+    <Compile Include="Forms\Mode\Process.Designer.cs">
+      <DependentUpon>Process.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Server\VMess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Server\VMess.Designer.cs">
+      <DependentUpon>VMess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Server\ShadowsocksR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Server\ShadowsocksR.Designer.cs">
+      <DependentUpon>ShadowsocksR.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Server\Socks5.cs">
       <SubType>Form</SubType>
@@ -114,6 +272,12 @@
     <Compile Include="Forms\Server\Shadowsocks.Designer.cs">
       <DependentUpon>Shadowsocks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingForm.Designer.cs">
+      <DependentUpon>SettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubscribeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,7 +285,9 @@
       <DependentUpon>SubscribeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Netch.cs" />
+    <Compile Include="Objects\Information\VMess.cs" />
     <Compile Include="Objects\Information\SSR.cs" />
     <Compile Include="Objects\Mode.cs" />
     <Compile Include="Objects\Server.cs" />
@@ -129,27 +295,49 @@
     <Compile Include="Objects\SSD\Server.cs" />
     <Compile Include="Objects\State.cs" />
     <Compile Include="Objects\SubscribeLink.cs" />
+    <Compile Include="Objects\VMess.cs" />
     <Compile Include="Override\ToolStripProfessionalRender.cs" />
     <Compile Include="Override\WebClient.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Configuration.cs" />
+    <Compile Include="3rd\FS\FolderSelect.cs" />
+    <Compile Include="Utils\DNS.cs" />
     <Compile Include="Utils\i18N.cs" />
     <Compile Include="Utils\Logging.cs" />
+    <Compile Include="3rd\FS\Reflector.cs" />
+    <Compile Include="Resolver.cs" />
+    <Compile Include="Utils\Bandwidth.cs" />
     <Compile Include="Utils\ShareLink.cs" />
+    <Compile Include="Utils\TUNTAP.cs" />
     <Compile Include="Win32Native.cs" />
+    <EmbeddedResource Include="Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GlobalBypassIPForm.resx">
+      <DependentUpon>GlobalBypassIPForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ModeForm.resx">
-      <DependentUpon>ModeForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Mode\Process.resx">
+      <DependentUpon>Process.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Server\VMess.resx">
+      <DependentUpon>VMess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Server\ShadowsocksR.resx">
+      <DependentUpon>ShadowsocksR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Server\Socks5.resx">
       <DependentUpon>Socks5.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Server\Shadowsocks.resx">
       <DependentUpon>Shadowsocks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingForm.resx">
+      <DependentUpon>SettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubscribeForm.resx">
       <DependentUpon>SubscribeForm.cs</DependentUpon>
@@ -175,6 +363,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\CNIP" />
+    <None Include="Resources\defaultTUNTAP" />
     <None Include="Resources\zh-CN" />
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +372,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Netch.ico" />
+    <None Include="Resources\N3RO.jpg" />
+    <None Include="Resources\Netch.png" />
     <None Include="Resources\speed.png" />
     <None Include="Resources\edit.png" />
     <None Include="Resources\delete.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>@ECHO OFF
@@ -200,9 +398,7 @@ MKDIR $(TargetDir)mode &gt; NUL 2&gt;&amp;1
 
 COPY /Y $(SolutionDir)binaries\$(PlatformName)\* $(TargetDir)bin &gt; NUL 2&gt;&amp;1
 COPY /Y $(SolutionDir)binaries\* $(TargetDir)bin &gt; NUL 2&gt;&amp;1
-MOVE /Y $(TargetDir)bin\nfapi.dll $(TargetDir)nfapi.dll &gt; NUL 2&gt;&amp;1
 MOVE /Y $(TargetDir)bin\nfapinet.dll $(TargetDir)nfapinet.dll &gt; NUL 2&gt;&amp;1
-MOVE /Y $(TargetDir)bin\NetchCore.dll $(TargetDir)NetchCore.dll &gt; NUL 2&gt;&amp;1
 COPY /Y $(SolutionDir)translations\i18n\* $(TargetDir)i18n &gt; NUL 2&gt;&amp;1
 COPY /Y $(SolutionDir)modes\mode\*.txt $(TargetDir)mode &gt; NUL 2&gt;&amp;1</PostBuildEvent>
   </PropertyGroup>

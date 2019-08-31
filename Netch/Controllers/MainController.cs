@@ -31,9 +31,25 @@ namespace Netch.Controllers
         public SSRController pSSRController = new SSRController();
 
         /// <summary>
+        ///     V2Ray 控制器
+        /// </summary>
+        public VMessController pVMessController = new VMessController();
+
+        /// <summary>
         ///		NF 控制器
         /// </summary>
         public NFController pNFController = new NFController();
+
+        /// <summary>
+        ///     HTTP 控制器
+        /// </summary>
+        public HTTPController pHTTPController = new HTTPController();
+
+
+        /// <summary>
+        ///     TUN/TAP 控制器
+        /// </summary>
+        public TUNTAPController pTUNTAPController = new TUNTAPController();
 
         /// <summary>
         ///		启动
@@ -50,12 +66,13 @@ namespace Netch.Controllers
                     result = true;
                     break;
                 case "Shadowsocks":
-                    result = pSSController.Start(server);
+                    result = pSSController.Start(server, mode);
                     break;
                 case "ShadowsocksR":
-                    result = pSSRController.Start(server);
+                    result = pSSRController.Start(server, mode);
                     break;
                 case "VMess":
+                    result = pVMessController.Start(server, mode);
                     break;
                 default:
                     break;
@@ -63,7 +80,34 @@ namespace Netch.Controllers
 
             if (result)
             {
-                result = pNFController.Start(server, mode);
+                if (mode.Type == 0)
+                {
+                    // 进程代理模式，启动 NF 控制器
+                    result = pNFController.Start(server, mode);
+                }
+                else if (mode.Type == 1)
+                {
+                    // TUN/TAP 全局代理模式，启动 TUN/TAP 控制器
+                    result = pTUNTAPController.Start(server, mode);
+                }
+                else if (mode.Type == 2)
+                {
+                    // TUN/TAP 全局代理模式，启动 TUN/TAP 控制器
+                    result = pTUNTAPController.Start(server, mode);
+                }
+                else if (mode.Type == 3 || mode.Type == 5)
+                {
+                    // HTTP 系统代理和 Socks5 和 HTTP 代理模式，启动 HTTP 控制器
+                    result = pHTTPController.Start(server, mode);
+                }
+                else if (mode.Type == 4)
+                {
+                    // Socks5 代理模式，不需要启动额外的控制器
+                }
+                else
+                {
+                    result = false;
+                }
             }
 
             if (!result)
@@ -79,9 +123,12 @@ namespace Netch.Controllers
         /// </summary>
         public void Stop()
         {
-            pNFController.Stop();
             pSSController.Stop();
             pSSRController.Stop();
+            pVMessController.Stop();
+            pNFController.Stop();
+            pHTTPController.Stop();
+            pTUNTAPController.Stop();
         }
     }
 }

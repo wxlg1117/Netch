@@ -44,6 +44,16 @@ namespace Netch.Objects
         public string Password;
 
         /// <summary>
+        ///		用户 ID（V2）
+        /// </summary>
+        public string UserID = String.Empty;
+
+        /// <summary>
+        ///		额外 ID（V2）
+        /// </summary>
+        public int AlterID = 0;
+
+        /// <summary>
         ///     加密方式
         /// </summary>
         public string EncryptMethod;
@@ -59,14 +69,49 @@ namespace Netch.Objects
         public string ProtocolParam;
 
         /// <summary>
-        ///     混淆
+        ///     混淆（SSR）/ 插件（SS）
         /// </summary>
         public string OBFS;
 
         /// <summary>
-        ///     混淆参数
+        ///     混淆参数（SSR）/ 插件参数（SS）
         /// </summary>
         public string OBFSParam;
+
+        /// <summary>
+        ///		传输协议（V2）
+        /// </summary>
+        public string TransferProtocol = "tcp";
+
+        /// <summary>
+        ///		伪装类型（V2）
+        /// </summary>
+        public string FakeType = String.Empty;
+
+        /// <summary>
+        ///		伪装域名（V2：HTTP、WebSocket、HTTP/2）
+        /// </summary>
+        public string Host = String.Empty;
+
+        /// <summary>
+        ///		传输路径（V2：WebSocket、HTTP/2）
+        /// </summary>
+        public string Path = String.Empty;
+
+        /// <summary>
+        ///		QUIC 加密方式（V2）
+        /// </summary>
+        public string QUICSecurity = "none";
+
+        /// <summary>
+        ///		QUIC 加密密钥（V2）
+        /// </summary>
+        public string QUICSecret = String.Empty;
+
+        /// <summary>
+        ///		TLS 底层传输安全（V2）
+        /// </summary>
+        public bool TLSSecure = false;
 
         /// <summary>
         ///     延迟
@@ -92,6 +137,8 @@ namespace Netch.Objects
                     return $"[SS] {Remark}";
                 case "ShadowsocksR":
                     return $"[SR] {Remark}";
+                case "VMess":
+                    return $"[V2] {Remark}";
                 default:
                     return "WTF";
             }
@@ -105,15 +152,10 @@ namespace Netch.Objects
         {
             try
             {
-                var destination = Dns.GetHostAddressesAsync(Address);
-                if (!destination.Wait(1000))
+                var destination = Utils.DNS.Lookup(Address);
+                if (destination == null)
                 {
-                    return Delay = 999;
-                }
-
-                if (destination.Result.Length == 0)
-                {
-                    return Delay = 999;
+                    return Delay = -2;
                 }
 
                 var list = new Task<int>[3];
@@ -128,33 +170,35 @@ namespace Netch.Objects
                                 var watch = new Stopwatch();
                                 watch.Start();
 
-                                var task = client.BeginConnect(new IPEndPoint(destination.Result[0], Port), (result) =>
+                                var task = client.BeginConnect(new IPEndPoint(destination, Port), (result) =>
                                 {
                                     watch.Stop();
                                 }, 0);
 
                                 if (task.AsyncWaitHandle.WaitOne(1000))
                                 {
-                                    return (int)(watch.ElapsedMilliseconds >= 460 ? 460 : watch.ElapsedMilliseconds);
+                                    return (int)watch.ElapsedMilliseconds;
                                 }
 
-                                return 999;
+                                return 1000;
                             }
                         }
                         catch (Exception)
                         {
-                            return 999;
+                            return -4;
                         }
                     });
                 }
 
                 Task.WaitAll(list);
 
-                return Delay = (list[0].Result + list[1].Result + list[2].Result) / 3;
+                var min = Math.Min(list[0].Result, list[1].Result);
+                min = Math.Min(min, list[2].Result);
+                return Delay = min;
             }
             catch (Exception)
             {
-                return Delay = 999;
+                return Delay = -4;
             }
         }
     }

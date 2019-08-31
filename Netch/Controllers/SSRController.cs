@@ -21,9 +21,22 @@ namespace Netch.Controllers
         ///		启动
         /// </summary>
         /// <param name="server">服务器</param>
-        /// <returns>是否成功</returns>
-        public bool Start(Objects.Server server)
+        /// <param name="mode">模式</param>
+        /// <returns>是否启动成功</returns>
+        public bool Start(Objects.Server server, Objects.Mode mode)
         {
+            foreach (var proc in Process.GetProcessesByName("ShadowsocksR"))
+            {
+                try
+                {
+                    proc.Kill();
+                }
+                catch (Exception)
+                {
+                    // 跳过
+                }
+            }
+
             if (!File.Exists("bin\\ShadowsocksR.exe"))
             {
                 return false;
@@ -58,6 +71,12 @@ namespace Netch.Controllers
             Instance = MainController.GetProcess();
             Instance.StartInfo.FileName = "bin\\ShadowsocksR.exe";
             Instance.StartInfo.Arguments = "-c ..\\data\\last.json -u";
+
+            if (mode.BypassChina)
+            {
+                Instance.StartInfo.Arguments += " --acl default.acl";
+            }
+
             Instance.OutputDataReceived += OnOutputDataReceived;
             Instance.ErrorDataReceived += OnOutputDataReceived;
 

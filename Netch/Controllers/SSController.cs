@@ -21,9 +21,22 @@ namespace Netch.Controllers
         ///		启动
         /// </summary>
         /// <param name="server">服务器</param>
-        /// <returns>是否成功</returns>
-        public bool Start(Objects.Server server)
+        /// <param name="mode">模式</param>
+        /// <returns>是否启动成功</returns>
+        public bool Start(Objects.Server server, Objects.Mode mode)
         {
+            foreach (var proc in Process.GetProcessesByName("Shadowsocks"))
+            {
+                try
+                {
+                    proc.Kill();
+                }
+                catch (Exception)
+                {
+                    // 跳过
+                }
+            }
+
             if (!File.Exists("bin\\Shadowsocks.exe"))
             {
                 return false;
@@ -40,7 +53,21 @@ namespace Netch.Controllers
 
             Instance = MainController.GetProcess();
             Instance.StartInfo.FileName = "bin\\Shadowsocks.exe";
-            Instance.StartInfo.Arguments = String.Format("-s {0} -p {1} -l 2801 -m {2} -k \"{3}\" -u", server.Address, server.Port, server.EncryptMethod, server.Password);
+            
+            if(!String.IsNullOrWhiteSpace(server.OBFS) && !String.IsNullOrWhiteSpace(server.OBFSParam))
+            {
+                Instance.StartInfo.Arguments = String.Format("-s {0} -p {1} -b 0.0.0.0 -l 2801 -m {2} -k \"{3}\" -u --plugin {4} --plugin-opts \"{5}\"", server.Address, server.Port, server.EncryptMethod, server.Password, server.OBFS, server.OBFSParam);
+            }
+            else
+            {
+                Instance.StartInfo.Arguments = String.Format("-s {0} -p {1} -b 0.0.0.0 -l 2801 -m {2} -k \"{3}\" -u", server.Address, server.Port, server.EncryptMethod, server.Password);
+            }
+            
+            if (mode.BypassChina)
+            {
+                Instance.StartInfo.Arguments += " --acl default.acl";
+            }
+
             Instance.OutputDataReceived += OnOutputDataReceived;
             Instance.ErrorDataReceived += OnOutputDataReceived;
 
@@ -105,7 +132,7 @@ namespace Netch.Controllers
                     {
                         State = Objects.State.Started;
                     }
-                    else if (e.Data.Contains("Invalid config path") || e.Data.Contains("usage"))
+                    else if (e.Data.Contains("Invalid config path") || e.Data.Contains("usage") || e.Data.Contains("plugin service exit unexpectedly"))
                     {
                         State = Objects.State.Stopped;
                     }
